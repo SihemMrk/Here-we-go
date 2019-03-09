@@ -19,7 +19,7 @@ export default class Preferences extends React.Component {
         <ScrollView>
           <View>
             <View style={styles.itemList}>
-              <Text style={styles.country}>Select your original country</Text>
+              <Text style={styles.country}>Select your language</Text>
               <Image
                 style={{ height: 32, width: 32 }}
                 source={{
@@ -30,7 +30,7 @@ export default class Preferences extends React.Component {
             </View>
             <View style={styles.lineStyle} />
             <View style={styles.itemList}>
-              <Text style={styles.country}>Select your original currency</Text>
+              <Text style={styles.country}>Select your original country</Text>
               <Image
                 style={{ height: 32, width: 32 }}
                 source={{
@@ -41,6 +41,18 @@ export default class Preferences extends React.Component {
             </View>
             <View style={styles.lineStyle} />
           </View>
+
+          <View style={styles.itemList}>
+            <Text style={styles.country}>Select your original currency</Text>
+            <Image
+              style={{ height: 32, width: 32 }}
+              source={{
+                uri:
+                  "http://www.myiconfinder.com/uploads/iconsets/256-256-7e81c2f3697b91ee17fe6ed6348c232a-Arrow.png"
+              }}
+            />
+          </View>
+          <View style={styles.lineStyle} />
         </ScrollView>
       </View>
     );

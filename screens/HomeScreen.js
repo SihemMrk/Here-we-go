@@ -63,7 +63,6 @@ export default class HomeScreen extends React.Component {
               <Text style={styles.rate}>1.13086 </Text>
               <Text style={styles.deviseToBase}>(1 USD = 0,8842 EUR)</Text>
             </View>
-
             <Text style={styles.update}>Last update: {this.state.date}</Text>
           </View>
         </ScrollView>
