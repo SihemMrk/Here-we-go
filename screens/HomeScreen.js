@@ -15,6 +15,8 @@ import { Menu } from "../components/Menu";
 
 import { AsyncStorage } from "react-native";
 
+import { NetworkInfo } from "react-native-network-info";
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null
@@ -29,6 +31,7 @@ export default class HomeScreen extends React.Component {
       regionName: ""
     };
   }
+
   componentDidMount() {
     var that = this;
     var date = new Date().getDate();
@@ -56,19 +59,26 @@ export default class HomeScreen extends React.Component {
       .catch(error => {
         console.error(error);
       });
-    var url =
-      "http://api.ipstack.com/98.14.234.113?access_key=bf58590dcdf38ab01585f179e5d85bf2&format=1";
-    fetch(url)
+    fetch("https://api.ipify.org?format=json")
       .then(response => response.json())
-      .then(responseJson => {
-        //console.log(responseJson);
-        this.setState({
-          countryName: responseJson.country_name,
-          regionName: responseJson.region_name
-        });
-      })
-      .catch(error => {
-        console.error(error);
+      .then(responseJSON => {
+        console.log(responseJSON.ip);
+        let url =
+          "http://api.ipstack.com/" +
+          responseJSON.ip +
+          "?access_key=bf58590dcdf38ab01585f179e5d85bf2&format=1";
+        fetch(url)
+          .then(response => response.json())
+          .then(responseJson => {
+            //console.log(responseJson);
+            this.setState({
+              countryName: responseJson.country_name,
+              regionName: responseJson.region_name
+            });
+          })
+          .catch(error => {
+            console.error(error);
+          });
       });
   }
 

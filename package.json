@@ -20,6 +20,7 @@
     "react-native-drawer": "^2.5.1",
     "react-native-languages": "^3.0.2",
     "react-native-list-view-select": "^1.0.4",
+    "react-native-network-info": "^4.0.1",
     "react-native-really-awesome-button": "^1.4.0",
     "react-native-side-drawer": "^1.0.9",
     "react-navigation": "^3.0.9"
