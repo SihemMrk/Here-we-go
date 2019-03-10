@@ -8,7 +8,7 @@
 - [x] Rajouter les pourcentages
 - [ ] Logo
 - [x] Faire le bouton show more - A
-- [ ] Changer le design - A
+- [x] Changer le design - A
 - [x] Avoir une partie coulissante avec les préférences et le menu - A
 - [ ] Splash Screen - A
 - [ ] Centrer le nom des catégories dans cost of living - A
@@ -18,4 +18,4 @@
 - [ ] Save les préférences
 - [x] Redimmensioner le update
 - [ ] Obtenir les préférences dans le home
-- [ ] Géolocalisation
+- [x] Géolocalisation

@@ -72,16 +72,6 @@ export default class HomeScreen extends React.Component {
       });
   }
 
-  getUserLanguage = async () => {
-    let language = "";
-    try {
-      userId = (await AsyncStorage.getItem("language")) || "none";
-    } catch (error) {
-      console.log(error.message);
-    }
-    return language;
-  };
-
   getUserCountry = async () => {
     let country = "";
     try {

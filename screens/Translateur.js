@@ -15,6 +15,16 @@ export default class Translateur extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  getUserLanguage = async () => {
+    let language = "";
+    try {
+      userId = (await AsyncStorage.getItem("language")) || "none";
+    } catch (error) {
+      console.log(error.message);
+    }
+    return language;
+  };
   render() {
     return (
       <View>
