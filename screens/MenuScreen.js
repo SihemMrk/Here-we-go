@@ -16,14 +16,14 @@ export default class MenuScreen extends React.Component {
       <View style={styles.divMenu}>
         <TouchableOpacity onPress={() => navigate("CostOfLiving")}>
           <Image
-            source={require("/Users/Sihem/projects/Here-we-go/assets/images/2cost.png")}
+            source={require("../assets/images/2cost.png")}
             style={{ width: 100, height: 100, marginLeft: 15 }}
           />
           <Text style={styles.TextStyle1}> Cost of Living </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigate("Translateur")}>
           <Image
-            source={require("/Users/Sihem/projects/Here-we-go/assets/images/traducteur.png")}
+            source={require("../assets/images/traducteur.png")}
             style={{ width: 90, height: 90, marginLeft: 40 }}
           />
 
@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
-    fontFamily: "Kohinoor Telugu",
     color: "#364e68"
   },
   TextStyle2: {
@@ -57,7 +56,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
-    fontFamily: "Kohinoor Telugu",
     color: "#364e68"
   }
 });

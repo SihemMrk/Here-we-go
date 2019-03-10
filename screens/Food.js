@@ -71,7 +71,7 @@ export default class Food extends React.Component {
         </View>
         <TouchableHighlight title="" onPress={() => navigate("CostOfLiving")}>
           <Image
-            source={require("/Users/Sihem/projects/Here-we-go/assets/images/back.png")}
+            source={require("../assets/images/back.png")}
             style={{
               width: 20,
               height: 20,
@@ -95,8 +95,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 50,
     fontSize: 40,
-    color: "#364e68",
-    fontFamily: "TimesNewRomanPSMT"
+    color: "#364e68"
   },
   lineStyle: {
     marginTop: 15,
@@ -106,14 +105,12 @@ const styles = StyleSheet.create({
   },
   category1: {
     flex: 0.4,
-    fontFamily: "Palatino",
     fontSize: 15,
     textAlign: "center",
     marginTop: 30
   },
   category: {
     flex: 0.4,
-    fontFamily: "Palatino",
     fontSize: 15,
     textAlign: "center",
     marginTop: 20
@@ -134,7 +131,6 @@ const styles = StyleSheet.create({
     flex: 0.2
   },
   conclusion: {
-    fontFamily: "Palatino",
     fontSize: 20,
     marginTop: 40,
     marginLeft: 15,

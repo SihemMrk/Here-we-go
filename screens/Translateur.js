@@ -23,7 +23,8 @@ export default class Translateur extends React.Component {
           <Text style={styles.word}>Yes</Text>
           <Image
             style={{ height: 40, width: 40 }}
-            source={require("/Users/Sihem/projects/Here-we-go/assets/images/flecheJaune.png")}
+            source={require("../assets/images/flecheJaune.png")}
+            source={require("../assets/images/flecheJaune.png")}
           />
           <Text style={styles.word}>Oui</Text>
         </View>
@@ -31,7 +32,7 @@ export default class Translateur extends React.Component {
           <Text style={styles.word}>How are you ?</Text>
           <Image
             style={{ height: 40, width: 40 }}
-            source={require("/Users/Sihem/projects/Here-we-go/assets/images/flecheJaune.png")}
+            source={require("../assets/images/flecheJaune.png")}
           />
           <Text style={styles.word}>Comment allez-vous ?</Text>
         </View>
@@ -39,7 +40,7 @@ export default class Translateur extends React.Component {
           <Text style={styles.word}>How do I go to (a place)?</Text>
           <Image
             style={{ height: 40, width: 40 }}
-            source={require("/Users/Sihem/projects/Here-we-go/assets/images/flecheJaune.png")}
+            source={require("../assets/images/flecheJaune.png")}
           />
           <Text style={styles.word}>Comment je vais à (un endroit) ?</Text>
         </View>
@@ -63,8 +64,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 20,
     fontSize: 40,
-    color: "#364e68",
-    fontFamily: "TimesNewRomanPSMT"
+    color: "#364e68"
   },
   word: {
     fontSize: 15,

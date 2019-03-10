@@ -77,8 +77,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 20,
     fontSize: 40,
-    color: "#364e68",
-    fontFamily: "TimesNewRomanPSMT"
+    color: "#364e68"
   },
   lineStyle: {
     marginTop: 15,
@@ -94,14 +93,12 @@ const styles = StyleSheet.create({
   },
   category1: {
     flex: 0.6,
-    fontFamily: "Palatino",
     fontSize: 20,
     textAlign: "center",
     marginTop: 30
   },
   category: {
     flex: 0.6,
-    fontFamily: "Palatino",
     fontSize: 20,
     textAlign: "center",
     marginTop: 20
@@ -112,7 +109,6 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   total: {
-    fontFamily: "Palatino",
     fontWeight: "bold",
     fontSize: 30,
     marginTop: 20,
@@ -134,7 +130,6 @@ const styles = StyleSheet.create({
   percentage2: {
     marginTop: 25,
     marginRight: 30,
-    fontFamily: "Palatino",
     fontWeight: "bold",
     fontSize: 30
   }

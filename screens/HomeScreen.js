@@ -7,13 +7,13 @@ import {
   Text,
   View,
   TextInput,
-  Button
+  Button,
+  TouchableOpacity
 } from "react-native";
 
-import Icon from "react-native-vector-icons/FontAwesome";
-import { WebBrowser } from "expo";
+import { Menu } from "../components/Menu";
 
-import { MonoText } from "../components/StyledText";
+import { AsyncStorage } from "react-native";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -22,7 +22,11 @@ export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: ""
+      currentValue: 0,
+      rate: {},
+      date: "",
+      countryName: "",
+      regionName: ""
     };
   }
   componentDidMount() {
@@ -37,73 +41,101 @@ export default class HomeScreen extends React.Component {
       date:
         date + "/" + month + "/" + year + " " + hours + ":" + min + ":" + sec
     });
+
+    fetch("https://api.exchangeratesapi.io/latest")
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(responseJson.rates.USD);
+        this.setState(
+          {
+            rate: responseJson.rates
+          },
+          function() {}
+        );
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    var url =
+      "http://api.ipstack.com/98.14.234.113?access_key=bf58590dcdf38ab01585f179e5d85bf2&format=1";
+    fetch(url)
+      .then(response => response.json())
+      .then(responseJson => {
+        //console.log(responseJson);
+        this.setState({
+          countryName: responseJson.country_name,
+          regionName: responseJson.region_name
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
+
+  getUserLanguage = async () => {
+    let language = "";
+    try {
+      userId = (await AsyncStorage.getItem("language")) || "none";
+    } catch (error) {
+      console.log(error.message);
+    }
+    return language;
+  };
+
+  getUserCountry = async () => {
+    let country = "";
+    try {
+      userId = (await AsyncStorage.getItem("country")) || "none";
+    } catch (error) {
+      console.log(error.message);
+    }
+    return country;
+  };
+
+  getUserCurrency = async () => {
+    let currency = "";
+    try {
+      userId = (await AsyncStorage.getItem("currency")) || "none";
+    } catch (error) {
+      console.log(error.message);
+    }
+    return currency;
+  };
 
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-        >
-          <Button title="Show More" onPress={() => navigate("ShowMore")} />
-          <View style={styles.border}>
-            <Text style={styles.location}>City, Country</Text>
-            {/* <Text style={styles.baseCurrency}>Base currency: EUR</Text> */}
-            <View style={styles.divConverter}>
-              <View style={styles.divConverter1}>
-                <Text style={styles.currentEx}> Exchange :</Text>
-              </View>
-              <View style={styles.divConverter2}>
-                <TextInput style={styles.converter} placeholder="Converter" />
-              </View>
-            </View>
-            <View style={styles.divExchange}>
-              <Text style={styles.rate}>1.13086 </Text>
-              <Text style={styles.deviseToBase}>(1 USD = 0,8842 EUR)</Text>
-            </View>
-            <Text style={styles.update}>Last update: {this.state.date}</Text>
+      <View style={styles.page}>
+        <View style={styles.homeTitle}>
+          <Text style={styles.location}>
+            {this.state.regionName}, {this.state.countryName}
+          </Text>
+        </View>
+        <ScrollView style={styles.contentContainer}>
+          <Text style={styles.currentEx}> Exchange rate :</Text>
+          <View style={styles.convertLine}>
+            <TextInput
+              style={{ ...styles.input, backgroundColor: "#ffffff" }}
+              keyboard-type="default"
+              onChangeText={currentValue => this.setState({ currentValue })}
+              placeholder="1"
+            />
+            <Text style={styles.currency}>€</Text>
           </View>
+          <Text style={styles.equalSign}>=</Text>
+          <View style={styles.convertLine}>
+            <Text style={styles.input}>{this.state.rate.USD}</Text>
+            <Text style={styles.currency}>$</Text>
+          </View>
+          <Text style={styles.deviseToBase}>(1 USD = 0,8842 EUR)</Text>
         </ScrollView>
+        <View style={styles.footer}>
+          <Text style={styles.update}>Last update: {this.state.date}</Text>
+        </View>
+        <Menu navigation={this.props.navigation} />
       </View>
     );
   }
-
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
-
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use
-          useful development tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
-    }
-  }
-
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync(
-      "https://docs.expo.io/versions/latest/guides/development-mode"
-    );
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      "https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes"
-    );
-  };
 }
 
 const styles = StyleSheet.create({
@@ -116,168 +148,77 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     overflow: "hidden",
-    padding: 12,
-    textAlign: "center"
+    padding: 12
+  },
+  page: {
+    flexDirection: "column",
+    backgroundColor: "#ebf0f6",
+    flex: 1
+  },
+  homeTitle: {
+    flex: 0.2,
+    justifyContent: "center",
+    color: "#364e68"
+  },
+  contentContainer: {
+    paddingTop: 30,
+    flex: 0.7
+  },
+  update: {
+    marginBottom: 20,
+    fontSize: 20,
+    marginLeft: 10,
+    textAlign: "left",
+    color: "#343434"
+  },
+  footer: {
+    flex: 0.1,
+    justifyContent: "flex-end"
   },
   location: {
+    marginTop: 10,
+    fontSize: 30,
     textAlign: "center",
-    marginTop: 40,
-    // fontWeight: "bold",
-    fontSize: 50,
-    color: "#364e68",
-    fontFamily: "TimesNewRomanPSMT"
-  },
-  baseCurrency: {
-    textAlign: "center",
-    marginTop: 37,
-    fontSize: 20,
-    color: "#343434",
-    fontFamily: "Kohinoor Telugu"
-  },
-  divExchange: {
-    // marginTop: 30
+    fontFamily: "noto-serif"
   },
   deviseToBase: {
     fontSize: 12,
     marginTop: 15,
     marginLeft: 200,
-    color: "#343434",
-    fontFamily: "Kohinoor Telugu"
+    color: "#343434"
     // textAlign: "center"
   },
   currentEx: {
-    // marginLeft: 60,
-    fontSize: 15,
-    color: "#343434",
-    fontFamily: "Kohinoor Telugu"
+    textAlign: "center",
+    fontSize: 24,
+    color: "#343434"
   },
-  rate: {
+  convertLine: {
+    marginTop: 10,
+    marginBottom: 10,
+    flex: 0.7,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  input: {
     fontSize: 60,
-    // fontWeight: "bold",
-    color: "#364e68",
     width: 270,
-    marginLeft: 60,
-    marginTop: 20,
     textAlign: "center",
     borderStyle: "solid",
     borderColor: "#364e68",
     borderWidth: 2,
     borderRadius: 23,
-    flex: 0.8,
-    fontFamily: "Verdana"
+    flex: 0.8
   },
-  divConverter: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginLeft: 60,
-    marginRight: 20,
-    marginTop: 110
+  currency: {
+    fontSize: 25,
+    paddingLeft: 5,
+    color: "#666666"
   },
-  update: {
-    fontSize: 15,
-    marginTop: 200,
-    marginRight: 10,
-    textAlign: "right",
-    fontFamily: "Cochin",
-    color: "#343434"
-  },
-  converter: {
-    fontSize: 10,
-    fontWeight: "bold",
-    height: 30,
-    width: 150,
-    paddingLeft: 7,
-    backgroundColor: "white",
-    borderColor: "#738598",
-    borderWidth: 0
-  },
-  container: {
-    // marginTop: 30,
-    // marginLeft: 10,
-    // marginRight: 10,
-    backgroundColor: "#ebf0f6",
-    flex: 1
-  },
-  // border: {
-  //   marginTop: 10,
-  //   borderWidth: 4,
-  //   borderColor: "#e6b31e"
-  // },
-
-  contentContainer: {
-    paddingTop: 30
-  },
-  welcomeContainer: {
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 20
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: "contain",
-    marginTop: 3,
-    marginLeft: -10
-  },
-  getStartedContainer: {
-    alignItems: "center",
-    marginHorizontal: 50
-  },
-  homeScreenFilename: {
-    marginVertical: 7
-  },
-  codeHighlightText: {
-    color: "rgba(96,100,109, 0.8)"
-  },
-  codeHighlightContainer: {
-    backgroundColor: "rgba(0,0,0,0.05)",
-    borderRadius: 3,
-    paddingHorizontal: 4
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: "rgba(96,100,109, 1)",
-    lineHeight: 24,
-    textAlign: "center"
-  },
-  tabBarInfoContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: "black",
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3
-      },
-      android: {
-        elevation: 20
-      }
-    }),
-    alignItems: "center",
-    backgroundColor: "#fbfbfb",
-    paddingVertical: 20
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: "rgba(96,100,109, 1)",
-    textAlign: "center"
-  },
-  navigationFilename: {
-    marginTop: 5
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: "center"
-  },
-  helpLink: {
-    paddingVertical: 15
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: "#2e78b7"
+  equalSign: {
+    textAlign: "center",
+    fontSize: 25,
+    color: "#777777"
   }
 });

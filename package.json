@@ -12,12 +12,14 @@
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
+    "data.js": "^0.12.3",
     "expo": "^32.0.6",
     "expo-google-sign-in": "^2.0.0",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-drawer": "^2.5.1",
     "react-native-languages": "^3.0.2",
+    "react-native-list-view-select": "^1.0.4",
     "react-native-really-awesome-button": "^1.4.0",
     "react-native-side-drawer": "^1.0.9",
     "react-navigation": "^3.0.9"
