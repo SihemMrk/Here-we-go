@@ -14,8 +14,7 @@ import {
 import { Menu } from "../components/Menu";
 
 import { AsyncStorage } from "react-native";
-
-import { NetworkInfo } from "react-native-network-info";
+import { NavigationEvents } from "react-navigation";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -33,6 +32,7 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.getUserCurrency());
     var that = this;
     var date = new Date().getDate();
     var month = new Date().getMonth() + 1;
@@ -48,7 +48,6 @@ export default class HomeScreen extends React.Component {
     fetch("https://api.exchangeratesapi.io/latest")
       .then(response => response.json())
       .then(responseJson => {
-        console.log(responseJson.rates.USD);
         this.setState(
           {
             rate: responseJson.rates
@@ -62,7 +61,6 @@ export default class HomeScreen extends React.Component {
     fetch("https://api.ipify.org?format=json")
       .then(response => response.json())
       .then(responseJSON => {
-        console.log(responseJSON.ip);
         let url =
           "http://api.ipstack.com/" +
           responseJSON.ip +
@@ -70,7 +68,6 @@ export default class HomeScreen extends React.Component {
         fetch(url)
           .then(response => response.json())
           .then(responseJson => {
-            //console.log(responseJson);
             this.setState({
               countryName: responseJson.country_name,
               regionName: responseJson.region_name
@@ -85,7 +82,7 @@ export default class HomeScreen extends React.Component {
   getUserCountry = async () => {
     let country = "";
     try {
-      userId = (await AsyncStorage.getItem("country")) || "none";
+      country = (await AsyncStorage.getItem("country")) || "none";
     } catch (error) {
       console.log(error.message);
     }
@@ -95,17 +92,24 @@ export default class HomeScreen extends React.Component {
   getUserCurrency = async () => {
     let currency = "";
     try {
-      userId = (await AsyncStorage.getItem("currency")) || "none";
+      currency = await AsyncStorage.getItem("currency");
+      console.log(currency);
     } catch (error) {
       console.log(error.message);
     }
     return currency;
   };
 
+  willFocusCallback() {
+    console.log("will Focus");
+    console.log(this.getUserCurrency());
+  }
+
   render() {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.page}>
+        <NavigationEvents onWillFocus={() => this.willFocusCallback()} />
         <View style={styles.homeTitle}>
           <Text style={styles.location}>
             {this.state.regionName}, {this.state.countryName}
@@ -116,7 +120,7 @@ export default class HomeScreen extends React.Component {
           <View style={styles.convertLine}>
             <TextInput
               style={{ ...styles.input, backgroundColor: "#ffffff" }}
-              keyboard-type="default"
+              keyboardType="numeric"
               onChangeText={currentValue => this.setState({ currentValue })}
               placeholder="1"
             />
@@ -127,7 +131,9 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.input}>{this.state.rate.USD}</Text>
             <Text style={styles.currency}>$</Text>
           </View>
-          <Text style={styles.deviseToBase}>(1 USD = 0,8842 EUR)</Text>
+          <Text style={styles.deviseToBase}>
+            (1 USD = 1/{this.state.rate.USD} EUR)
+          </Text>
         </ScrollView>
         <View style={styles.footer}>
           <Text style={styles.update}>Last update: {this.state.date}</Text>

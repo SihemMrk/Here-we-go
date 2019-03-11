@@ -14,153 +14,9 @@ import ListViewSelect from "react-native-list-view-select";
 
 import { AsyncStorage } from "react-native";
 
-const languages = [
-  {
-    code: "fr",
-    status: "production",
-    name: "French"
-  },
-  {
-    code: "en",
-    status: "production",
-    name: "English"
-  },
-  {
-    code: "ar",
-    status: "production",
-    name: "Arabic"
-  },
-  {
-    code: "ja",
-    status: "production",
-    name: "Japanese"
-  },
-  {
-    code: "es",
-    status: "production",
-    name: "Spanish"
-  },
-  {
-    code: "de",
-    status: "production",
-    name: "German"
-  },
-  {
-    code: "it",
-    status: "production",
-    name: "Italian"
-  },
-  {
-    code: "id",
-    status: "production",
-    name: "Indonesian"
-  },
-  {
-    code: "pt",
-    status: "production",
-    name: "Portuguese"
-  },
-  {
-    code: "ko",
-    status: "production",
-    name: "Korean"
-  },
-  {
-    code: "tr",
-    status: "production",
-    name: "Turkish"
-  },
-  {
-    code: "ru",
-    status: "production",
-    name: "Russian"
-  },
-  {
-    code: "nl",
-    status: "production",
-    name: "Dutch"
-  },
-  {
-    code: "fil",
-    status: "production",
-    name: "Filipino"
-  },
-  {
-    code: "msa",
-    status: "production",
-    name: "Malay"
-  },
-  {
-    code: "zh-tw",
-    status: "production",
-    name: "Traditional Chinese"
-  },
-  {
-    code: "zh-cn",
-    status: "production",
-    name: "Simplified Chinese"
-  },
-  {
-    code: "hi",
-    status: "production",
-    name: "Hindi"
-  },
-  {
-    code: "no",
-    status: "production",
-    name: "Norwegian"
-  },
-  {
-    code: "sv",
-    status: "production",
-    name: "Swedish"
-  },
-  {
-    code: "fi",
-    status: "production",
-    name: "Finnish"
-  },
-  {
-    code: "da",
-    status: "production",
-    name: "Danish"
-  },
-  {
-    code: "pl",
-    status: "production",
-    name: "Polish"
-  },
-  {
-    code: "hu",
-    status: "production",
-    name: "Hungarian"
-  },
-  {
-    code: "fa",
-    status: "production",
-    name: "Farsi"
-  },
-  {
-    code: "he",
-    status: "production",
-    name: "Hebrew"
-  },
-  {
-    code: "ur",
-    status: "production",
-    name: "Urdu"
-  },
-  {
-    code: "th",
-    status: "production",
-    name: "Thai"
-  },
-  {
-    code: "en-gb",
-    status: "production",
-    name: "English UK"
-  }
-];
+import { NavigationEvents } from "react-navigation";
+const languages = ["French", "Spanish", "German"];
+
 export default class Preferences extends React.Component {
   static navigationOptions = {
     title: "Preferences"
@@ -169,7 +25,7 @@ export default class Preferences extends React.Component {
     super();
     this.state = {
       countries: [],
-      currencies: {},
+      currencies: [],
       languages: languages,
       displayListCountries: "none",
       displayListCurrencies: "none",
@@ -203,18 +59,18 @@ export default class Preferences extends React.Component {
       .then(response => {
         let lines = response._bodyInit.split("\n");
         let names = lines.shift().split(",");
+        let index = 0;
         let data = lines.map(line => {
           let valeurs = line.split(",");
-          let obj = {};
+          let obj = { myKey: index++ };
           for (let i = 0, max = valeurs.length; i < max; i++) {
             obj[names[i]] = valeurs[i];
           }
           return obj;
         });
-        // console.log(lines);
-        // // console.log(data);
-        // // console.log(data.length);
-        console.log(data[0]);
+        this.setState({
+          currencies: data
+        });
       })
       .catch(error => {
         console.error(error);
@@ -244,6 +100,29 @@ export default class Preferences extends React.Component {
     }
   };
 
+  willFocusCallback() {
+    console.log("focus");
+    AsyncStorage.getItem("currency", (err, currency) => {
+      if (err) {
+        console.log("nop");
+        return;
+      }
+      this.setState({
+        currentCurrency: currency
+      });
+    });
+
+    AsyncStorage.getItem("language", (err, language) => {
+      if (err) {
+        console.log("nop");
+        return;
+      }
+      this.setState({
+        currentLanguage: language
+      });
+    });
+  }
+
   onPressCountries() {
     this.setState({
       displayListCountries: "flex"
@@ -264,27 +143,34 @@ export default class Preferences extends React.Component {
   selectCountry(country) {
     this.setState({
       currentCountry: country,
-      displayListCountry: "none"
+      displayListCountries: "none"
     });
   }
 
   selectCurrency(currency) {
-    this.setState({
-      currentCurrency: currency,
-      displayListCurrency: "none"
-    });
+    this.setState(
+      {
+        currentCurrency: currency,
+        displayListCurrencies: "none"
+      },
+      this.userCurrency
+    );
   }
 
   selectLanguage(language) {
-    this.setState({
-      currentLanguage: language,
-      displayListLanguages: "none"
-    });
+    this.setState(
+      {
+        currentLanguage: language,
+        displayListLanguages: "none"
+      },
+      this.userLanguage
+    );
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <NavigationEvents onWillFocus={() => this.willFocusCallback()} />
         <ScrollView>
           <View>
             <TouchableOpacity
@@ -378,9 +264,33 @@ export default class Preferences extends React.Component {
               return (
                 <TouchableOpacity
                   key={language.name}
-                  onPress={() => this.selectLanguage(language.name)}
+                  onPress={() => this.selectLanguage(language)}
                 >
-                  <Text style={styles.languageItem}>{language.name}</Text>
+                  <Text style={styles.languageItem}>{language}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </Animated.View>
+        <Animated.View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "#ffffff",
+            display: this.state.displayListCurrencies
+          }}
+        >
+          <ScrollView>
+            {this.state.currencies.map(currency => {
+              return (
+                <TouchableOpacity
+                  key={currency.myKey}
+                  onPress={() => this.selectCurrency(currency.Currency)}
+                >
+                  <Text style={styles.countryItem}>{currency.Currency}</Text>
                 </TouchableOpacity>
               );
             })}
