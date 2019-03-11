@@ -107,6 +107,7 @@ export default class HomeScreen extends React.Component {
 
   render() {
     const { navigate } = this.props.navigation;
+    const convert = Math.round((1 / this.state.rate.USD) * 1000) / 1000;
     return (
       <View style={styles.page}>
         <NavigationEvents onWillFocus={() => this.willFocusCallback()} />
@@ -131,9 +132,7 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.input}>{this.state.rate.USD}</Text>
             <Text style={styles.currency}>$</Text>
           </View>
-          <Text style={styles.deviseToBase}>
-            (1 USD = 1/{this.state.rate.USD} EUR)
-          </Text>
+          <Text style={styles.deviseToBase}>(1 USD = {convert} EUR)</Text>
         </ScrollView>
         <View style={styles.footer}>
           <Text style={styles.update}>Last update: {this.state.date}</Text>

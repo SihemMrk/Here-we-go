@@ -3,7 +3,7 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerNgrokUrl": "https://ji-hcj.anonymous.here-we-go.exp.direct",
+  "packagerNgrokUrl": "https://packager.ji-hcj.anonymous.here-we-go.exp.direct",
+  "ngrokPid": 3969
 }
